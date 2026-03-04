@@ -1,6 +1,5 @@
-FROM node:20-slim
-ARG CACHEBUST=4
-RUN npm install -g openclaw 2>&1 || true
-RUN ls /usr/local/lib/node_modules/ | head -20 || true
-RUN ls /usr/local/bin/ | head -30 || true
-CMD ["echo", "check build logs"]
+FROM node:22-slim
+ARG CACHEBUST=6
+RUN npm install -g openclaw
+RUN ls /usr/local/bin/ | grep claw || echo "NOT FOUND"
+CMD ["/bin/sh", "-c", "openclaw setup --key \"$ANTHROPIC_API_KEY\" 2>/dev/null || true && openclaw channel add telegram \"$TELEGRAM_TOKEN\" 2>/dev/null || true && openclaw gateway start"]
